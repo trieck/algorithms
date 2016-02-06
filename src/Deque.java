@@ -29,11 +29,12 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         Deque<String> deque = new Deque<>();
 
-        deque.addFirst("rieck");
+        deque.addLast("rieck");
         deque.addFirst("andrew");
         deque.addFirst("thomas");
 
         int sz = deque.size();
+        assert (sz == 3);
 
         for (String s : deque) {
             StdOut.println(s);
@@ -43,8 +44,13 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         String s = deque.removeFirst();
+        assert ("thomas".equals(s));
         s = deque.removeLast();
+        assert ("rieck".equals(s));
         s = deque.removeFirst();
+        assert ("andrew".equals(s));
+
+        assert (deque.isEmpty());
     }
 
     /**

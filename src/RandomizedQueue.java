@@ -28,30 +28,44 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @param args the program arguments
      */
     public static void main(String[] args) {
-        RandomizedQueue<String> queue = new RandomizedQueue();
+        RandomizedQueue<String> queue = new RandomizedQueue<>();
 
         queue.enqueue("rieck");
         queue.enqueue("andrew");
         queue.enqueue("thomas");
 
-        String s = queue.dequeue();
-        s = queue.dequeue();
-        s = queue.dequeue();
+        assert (queue.size() == 3);
+        assert (!queue.isEmpty());
 
         for (String t : queue) {
             StdOut.println(t);
         }
+
+        queue.sample();
+
+        queue.dequeue();
+        queue.dequeue();
+        queue.dequeue();
+
+        assert (queue.isEmpty());
 
         queue.enqueue("lily");
         queue.enqueue("caleb");
         queue.enqueue("aaron");
 
+        assert (queue.size() == 3);
+        assert (!queue.isEmpty());
+
+        int i = 0;
         for (String t : queue) {
             StdOut.println(t);
             for (String u : queue) {
                 StdOut.println("   " + u);
+                i++;
             }
         }
+
+        assert (i == 9);
     }
 
     /**
@@ -123,6 +137,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return item;
     }
 
+    /**
+     * Exchange elements in array
+     *
+     * @param i the first index
+     * @param j the second index
+     */
     private void exch(int i, int j) {
         validate(i);
         validate(j);
@@ -134,6 +154,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
+    /**
+     * Validate input in range 0 to N-1
+     *
+     * @param i the index
+     */
     private void validate(int i) {
         if (0 > i || N <= i)
             throw new java.util.NoSuchElementException();
