@@ -115,6 +115,8 @@ public class Deque<Item> implements Iterable<Item> {
      * @return the item from the front
      */
     public Item removeFirst() {
+        if (N == 0) throw new NoSuchElementException();
+
         Node save = first;
         first = save.next;
         if (last == save)
@@ -135,6 +137,8 @@ public class Deque<Item> implements Iterable<Item> {
      * @return the item from the end
      */
     public Item removeLast() {
+        if (N == 0) throw new NoSuchElementException();
+
         Node save = last;
         last = save.prev;
         if (first == save)
