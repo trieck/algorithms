@@ -42,9 +42,9 @@ public class FastCollinearPoints {
         this.N = points.length;
         this.V = new int[N];
         this.nsegments = 0;
-        this.segments = new LineSegment[points.length];
+        this.segments = new LineSegment[N * 2];
 
-        for (int i = 0; i < points.length; ++i) {
+        for (int i = 0; i < N; ++i) {
             addSegment(i);
         }
     }
@@ -84,24 +84,23 @@ public class FastCollinearPoints {
 
         sort(i);
 
-        double slope, last = Double.NEGATIVE_INFINITY;
+        double slope, last = Double.MIN_VALUE;
 
         for (int j = i + 1, n = 0; j < N; ++j) {
             slope = points[i].slopeTo(points[j]);
-            if (last == slope) {
+            if (Double.compare(last, slope) == 0) {
                 n = 2;
                 V[0] = j - 1;
                 V[1] = j;
-                for (int m = j + 1; m < N; m++) {
-                    slope = points[i].slopeTo(points[m]);
-                    if (last != slope)
+                for (int m = j + 1; m < N; ++m) {
+                    slope = points[j].slopeTo(points[m]);
+                    if (Double.compare(last, slope) != 0)
                         break;
                     V[n++] = m;
                 }
 
                 if (n >= 3) {
                     addSegment(i, n);
-                    break;
                 }
             }
             last = slope;

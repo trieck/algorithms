@@ -70,7 +70,7 @@ public class Point implements Comparable<Point> {
             return Double.NEGATIVE_INFINITY;    // degenerate line
 
         if (this.y == that.y)
-            return 0.0;     // horizontal line
+            return +0.0f;     // horizontal line
 
         if (this.x == that.x)
             return Double.POSITIVE_INFINITY;    // vertical line
@@ -134,6 +134,15 @@ public class Point implements Comparable<Point> {
         public int compare(Point p1, Point p2) {
             assert (Point.this != p1);
             assert (Point.this != p2);
+
+            if (Point.this.equals(p1))
+                throw new IllegalArgumentException();
+
+            if (Point.this.equals(p2))
+                throw new IllegalArgumentException();
+
+            if (p1.equals(p2))
+                throw new IllegalArgumentException();
 
             double s1 = slopeTo(p1);
             double s2 = slopeTo(p2);
