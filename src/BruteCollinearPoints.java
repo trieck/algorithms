@@ -39,6 +39,7 @@ public class BruteCollinearPoints {
         int N = points.length;
         for (int i = 0; i < N; ++i) {
             for (int j = i + 1; j < N; ++j) {
+                validate(i, j);
                 for (int k = j + 1; k < N; ++k) {
                     for (int m = k + 1; m < N; ++m) {
                         if (isCollinear(i, j, k, m)) {
