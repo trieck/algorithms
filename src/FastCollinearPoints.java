@@ -45,11 +45,16 @@ public class FastCollinearPoints {
 
         this.V = new int[N];
         this.nsegments = 0;
-        this.segments = new LineSegment[N];
+        this.segments = new LineSegment[N * N];
 
         for (int i = 0; i < N; ++i) {
-            if (points[i] == null)
-                throw new NullPointerException();
+            for (int j = i + 1; j < N; ++j) {
+                if (points[i] == null || points[j] == null)
+                    throw new NullPointerException();
+
+                if (points[i].compareTo(points[j]) == 0)
+                    throw new IllegalArgumentException();
+            }
 
             aux[i] = points[i];
         }

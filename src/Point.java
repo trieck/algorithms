@@ -132,14 +132,8 @@ public class Point implements Comparable<Point> {
 
         @Override
         public int compare(Point p1, Point p2) {
-
-            if (p1.equals(p2))
-                throw new IllegalArgumentException();
-
             double s1 = slopeTo(p1);
             double s2 = slopeTo(p2);
-
-            // TODO: handle horizontal, vertical and degenerate segments
             return Double.compare(s1, s2);
         }
     }
