@@ -106,7 +106,6 @@ public class FastCollinearPoints {
             double slope = points[i].slopeTo(aux[j]);
             for (k = j + 1, n = 1, V[0] = j; k < N; ++k) {
                 if (points[i] == aux[j]) {  // self
-                    k = j + 1;
                     continue;
                 }
 
