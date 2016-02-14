@@ -132,14 +132,6 @@ public class Point implements Comparable<Point> {
 
         @Override
         public int compare(Point p1, Point p2) {
-            assert (Point.this != p1);
-            assert (Point.this != p2);
-
-            if (Point.this.equals(p1))
-                throw new IllegalArgumentException();
-
-            if (Point.this.equals(p2))
-                throw new IllegalArgumentException();
 
             if (p1.equals(p2))
                 throw new IllegalArgumentException();

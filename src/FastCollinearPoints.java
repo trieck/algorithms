@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public class FastCollinearPoints {
 
-    private final Point[] points;
+    private final Point[] points, aux;
     private final int N;
     private final int[] V;
     private int nsegments;    // number of segments
@@ -36,16 +36,26 @@ public class FastCollinearPoints {
      */
     public FastCollinearPoints(Point[] points) {
         if (points == null)
+
             throw new NullPointerException();
 
         this.points = points;
         this.N = points.length;
+        this.aux = new Point[N];
+
         this.V = new int[N];
         this.nsegments = 0;
-        this.segments = new LineSegment[N * 2];
+        this.segments = new LineSegment[N];
 
         for (int i = 0; i < N; ++i) {
-            addSegment(i);
+            if (points[i] == null)
+                throw new NullPointerException();
+
+            aux[i] = points[i];
+        }
+
+        for (int i = 0; i < N; ++i) {
+            addSegments(i);
         }
     }
 
@@ -78,17 +88,24 @@ public class FastCollinearPoints {
         }
     }
 
-    private void addSegment(int i) {
-        if (points[i] == null)
-            throw new NullPointerException();
+    private void addSegments(int i) {
 
         sort(i);
 
-        double slope, next;
-        for (int j = i + 1, k, n; j < N - 1; j = k) {
-            slope = points[i].slopeTo(points[j]);
+        for (int j = 0, k, n; j < N; j = k) {
+            if (points[i] == aux[j]) {  // self
+                k = j + 1;
+                continue;
+            }
+
+            double slope = points[i].slopeTo(aux[j]);
             for (k = j + 1, n = 1, V[0] = j; k < N; ++k) {
-                next = points[i].slopeTo(points[k]);
+                if (points[i] == aux[j]) {  // self
+                    k = j + 1;
+                    continue;
+                }
+
+                double next = points[i].slopeTo(aux[k]);
                 if (Double.compare(slope, next) != 0)
                     break;
                 V[n++] = k;
@@ -101,20 +118,19 @@ public class FastCollinearPoints {
     }
 
     private void addSegment(int i, int n) {
-        int min = i, max = i;
+        Point min = points[i], max = points[i];
 
         for (int j = 0; j < n; ++j) {
-            min = points[min].compareTo(points[V[j]]) < 0 ? min : V[j];
-            max = points[max].compareTo(points[V[j]]) > 0 ? max : V[j];
+            min = min.compareTo(aux[V[j]]) < 0 ? min : aux[V[j]];
+            max = max.compareTo(aux[V[j]]) > 0 ? max : aux[V[j]];
         }
 
-        segments[nsegments++] = new LineSegment(points[min], points[max]);
+        if (points[i] == min)
+            segments[nsegments++] = new LineSegment(min, max);
     }
 
     private void sort(int i) {
-        if (i < N - 1) {
-            Arrays.sort(points, i + 1, N, points[i].slopeOrder());
-        }
+        Arrays.sort(aux, 0, N, points[i].slopeOrder());
     }
 
     /**
