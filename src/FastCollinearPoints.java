@@ -84,26 +84,20 @@ public class FastCollinearPoints {
 
         sort(i);
 
-        double slope, last = Double.MIN_VALUE;
-
-        for (int j = i + 1, n = 0; j < N; ++j) {
+        double slope, next;
+        for (int j = i + 1, k, n; j < N - 1; j = k) {
+            V[0] = j;
             slope = points[i].slopeTo(points[j]);
-            if (Double.compare(last, slope) == 0) {
-                n = 2;
-                V[0] = j - 1;
-                V[1] = j;
-                for (int m = j + 1; m < N; ++m) {
-                    slope = points[j].slopeTo(points[m]);
-                    if (Double.compare(last, slope) != 0)
-                        break;
-                    V[n++] = m;
-                }
-
-                if (n >= 3) {
-                    addSegment(i, n);
-                }
+            for (k = j + 1, n = 1; k < N; ++k) {
+                next = points[i].slopeTo(points[k]);
+                if (Double.compare(slope, next) != 0)
+                    break;
+                V[n++] = k;
             }
-            last = slope;
+
+            if (n >= 3) {
+                addSegment(i, n);
+            }
         }
     }
 
