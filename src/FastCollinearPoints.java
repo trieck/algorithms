@@ -86,9 +86,8 @@ public class FastCollinearPoints {
 
         double slope, next;
         for (int j = i + 1, k, n; j < N - 1; j = k) {
-            V[0] = j;
             slope = points[i].slopeTo(points[j]);
-            for (k = j + 1, n = 1; k < N; ++k) {
+            for (k = j + 1, n = 1, V[0] = j; k < N; ++k) {
                 next = points[i].slopeTo(points[k]);
                 if (Double.compare(slope, next) != 0)
                     break;
