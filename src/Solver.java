@@ -65,31 +65,54 @@ public class Solver {
         node.previous = null;
         queue.insert(node);
 
+        // Twin board to check solvability
+        Board twin = initial.twin();
+        MinPQ<SearchNode> twinQueue = new MinPQ<>();
+        SearchNode twinNode = new SearchNode();
+        twinNode.board = twin;
+        twinNode.moves = 0;
+        twinNode.previous = null;
+        twinQueue.insert(twinNode);
+
         // Delete from the priority queue the search node with the
         // minimum priority, and insert onto the priority queue all neighboring
         // search nodes (those that can be reached in one move from the
         // dequeued search node). Repeat this procedure until the search node
         // dequeued corresponds to a goal board.
-        for (int moves = 0; !queue.isEmpty(); ++moves) {
+        for (int moves = 1; !queue.isEmpty() && !twinQueue.isEmpty();
+             ++moves) {
+            twinNode = twinQueue.delMin();
+            if (twinNode.isGoal()) {
+                goal = null;    // unsolvable
+                break;
+            }
+
             node = queue.delMin();
             if (node.isGoal()) {
                 goal = node;
                 break;
             }
 
-            for (Board board : node.neighbors()) {
-                // when considering the neighbors of a search node, don't
-                // enqueue a neighbor if its board is the same as the board of
-                // the previous search node.
-                if (node.previous != null && board.equals(node.previous.board))
-                    continue;
+            enqueNeighbors(node, queue, moves);
+            enqueNeighbors(twinNode, twinQueue, moves);
+        }
+    }
 
-                SearchNode neighbor = new SearchNode();
-                neighbor.board = board;
-                neighbor.moves = moves + 1;
-                neighbor.previous = node;
-                queue.insert(neighbor);
-            }
+    private void enqueNeighbors(SearchNode node, MinPQ<SearchNode> pq, int
+            moves) {
+
+        for (Board board : node.neighbors()) {
+            // when considering the neighbors of a search node, don't
+            // enqueue a neighbor if its board is the same as the board of
+            // the previous search node.
+            if (node.previous != null && board.equals(node.previous.board))
+                continue;
+
+            SearchNode neighbor = new SearchNode();
+            neighbor.board = board;
+            neighbor.moves = moves;
+            neighbor.previous = node;
+            pq.insert(neighbor);
         }
     }
 
@@ -99,7 +122,7 @@ public class Solver {
      * @return true if solvable, otherwise false
      */
     public boolean isSolvable() {
-        return true;
+        return goal != null;
     }
 
     /**
