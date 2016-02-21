@@ -171,13 +171,17 @@ public class Solver {
      */
     private class SearchNode implements Comparable<SearchNode> {
         private Board board;
-        private int moves;
+        private int moves, manhattan = -1;
         private SearchNode previous;
 
         private int priority() {
             int p = moves;
-            if (board != null)
-                p += board.manhattan();
+            if (board != null) {
+                if (manhattan == -1)
+                    manhattan = board.manhattan();
+
+                p += manhattan;
+            }
 
             return p;
         }

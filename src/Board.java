@@ -33,7 +33,7 @@ public class Board {
         }
     }
 
-    public Board(Board other) {
+    private Board(Board other) {
         this(other.tiles);
     }
 
@@ -131,15 +131,11 @@ public class Board {
      * @return the sum
      */
     private int manhattanDistance(int i, int j) {
-        int g = goal(i, j) - 1;
-        int gr = g / N;
-        int gc = g % N;
-
         int b = tiles[i][j] - 1;
         int br = b / N;
         int bc = b % N;
 
-        return Math.abs(br - gr) + Math.abs(bc - gc);
+        return Math.abs(br - i) + Math.abs(bc - j);
     }
 
     /**
