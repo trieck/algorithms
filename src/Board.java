@@ -1,7 +1,6 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
 
 /**
  * Thomas A. Rieck
@@ -156,31 +155,17 @@ public class Board {
     public Board twin() {
         Board other = new Board(this);
 
-        int i = StdRandom.uniform(N * N);
-        while (other.isBlank(i)) {
-            i = StdRandom.uniform(N * N);
+        int row = 0;
+
+        int b1 = tiles[row][0];
+        int b2 = tiles[row][1];
+        if (b1 == 0 || b2 == 0) {
+            row++;
         }
 
-        int j = StdRandom.uniform(N * N);
-        while (other.isBlank(j) || i == j) {
-            j = StdRandom.uniform(N * N);
-        }
-
-        int ir = i / N;
-        int ic = i % N;
-
-        int jr = j / N;
-        int jc = j % N;
-
-        other.exchange(ir, ic, jr, jc);
+        other.exchange(row, 0, row, 1);
 
         return other;
-    }
-
-    private boolean isBlank(int index) {
-        int r = index / N;
-        int c = index % N;
-        return tiles[r][c] == 0;
     }
 
     /**
@@ -194,7 +179,9 @@ public class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
+
         Board that = (Board) y;
+
         if (that.N != this.N) return false;
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < N; ++j) {

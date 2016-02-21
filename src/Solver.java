@@ -1,7 +1,4 @@
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.*;
 
 /**
  * Thomas A. Rieck
@@ -44,6 +41,7 @@ public class Solver {
         Board initial = new Board(blocks);
 
         // solve the puzzle
+        Stopwatch stopwatch = new Stopwatch();
         Solver solver = new Solver(initial);
 
         // print solution to standard output
@@ -54,6 +52,8 @@ public class Solver {
             for (Board board : solver.solution())
                 StdOut.println(board);
         }
+
+        StdOut.printf("elapsed time: %.2f seconds.%n", stopwatch.elapsedTime());
     }
 
     private void solve(Board initial) {
@@ -175,15 +175,19 @@ public class Solver {
         private SearchNode previous;
 
         private int priority() {
-            int p = moves;
-            if (board != null) {
-                if (manhattan == -1)
-                    manhattan = board.manhattan();
+            return moves + distance();
+        }
 
-                p += manhattan;
+        private int distance() {
+            int distance = 0;
+            if (board != null) {
+                if (manhattan == -1) {
+                    manhattan = board.manhattan();
+                }
+                distance = manhattan;
             }
 
-            return p;
+            return distance;
         }
 
         @Override
@@ -193,6 +197,17 @@ public class Solver {
 
             if (left < right)
                 return -1;
+            if (left > right)
+                return 1;
+
+            // When two search nodes have the same priority,
+            // break ties by comparing Manhattan distances of the two boards
+            left = this.distance();
+            right = o.distance();
+
+            if (left < right)
+                return -1;
+
             if (left > right)
                 return 1;
 
