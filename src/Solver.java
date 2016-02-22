@@ -83,8 +83,7 @@ public class Solver {
         // search nodes (those that can be reached in one move from the
         // dequeued search node). Repeat this procedure until the search node
         // dequeued corresponds to a goal board.
-        for (int moves = 1; !queue.isEmpty() && !twinQueue.isEmpty();
-             ++moves) {
+        while (!queue.isEmpty() && !twinQueue.isEmpty()) {
             twinNode = twinQueue.delMin();
             if (twinNode.isGoal()) {
                 goal = null;    // unsolvable
@@ -97,13 +96,12 @@ public class Solver {
                 break;
             }
 
-            enqueNeighbors(node, queue, moves);
-            enqueNeighbors(twinNode, twinQueue, moves);
+            enqueNeighbors(node, queue);
+            enqueNeighbors(twinNode, twinQueue);
         }
     }
 
-    private void enqueNeighbors(SearchNode node, MinPQ<SearchNode> pq, int
-            moves) {
+    private void enqueNeighbors(SearchNode node, MinPQ<SearchNode> pq) {
 
         for (Board board : node.neighbors()) {
             // when considering the neighbors of a search node, don't
@@ -114,7 +112,7 @@ public class Solver {
 
             SearchNode neighbor = new SearchNode();
             neighbor.board = board;
-            neighbor.moves = moves;
+            neighbor.moves = node.moves + 1;
             neighbor.previous = node;
             pq.insert(neighbor);
         }
@@ -138,14 +136,7 @@ public class Solver {
         if (!isSolvable())
             return -1;
 
-        int moves = 0;
-        SearchNode node = goal;
-        while (node != null) {
-            moves++;
-            node = node.previous;
-        }
-
-        return Math.max(0, moves - 1);
+        return goal.moves;
     }
 
     /**
