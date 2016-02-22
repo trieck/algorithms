@@ -192,8 +192,8 @@ public class Solver {
 
         @Override
         public int compareTo(SearchNode o) {
-            int left = this.getHamming() + moves;
-            int right = o.getHamming() + o.moves;
+            int left = this.getManhattan() + moves;
+            int right = o.getManhattan() + o.moves;
 
             if (left < right)
                 return -1;
