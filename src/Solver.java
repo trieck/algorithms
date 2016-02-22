@@ -179,10 +179,6 @@ public class Solver {
                 hamming = Integer.MAX_VALUE;
         private SearchNode previous;
 
-        private int priority() {
-            return moves + getHamming();
-        }
-
         private int getManhattan() {
             if (board != null) {
                 if (manhattan == Integer.MAX_VALUE) {
@@ -205,8 +201,8 @@ public class Solver {
 
         @Override
         public int compareTo(SearchNode o) {
-            int left = this.priority();
-            int right = o.priority();
+            int left = this.moves;
+            int right = o.moves;
 
             if (left < right)
                 return -1;
