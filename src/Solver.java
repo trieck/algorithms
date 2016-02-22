@@ -171,23 +171,32 @@ public class Solver {
      */
     private class SearchNode implements Comparable<SearchNode> {
         private Board board;
-        private int moves, manhattan = -1;
+        private int moves, manhattan = Integer.MAX_VALUE,
+                hamming = Integer.MAX_VALUE;
         private SearchNode previous;
 
         private int priority() {
-            return moves + distance();
+            return moves * 10 + getManhattan();
         }
 
-        private int distance() {
-            int distance = 0;
+        private int getManhattan() {
             if (board != null) {
-                if (manhattan == -1) {
+                if (manhattan == Integer.MAX_VALUE) {
                     manhattan = board.manhattan();
                 }
-                distance = manhattan;
             }
 
-            return distance;
+            return manhattan;
+        }
+
+        private int getHamming() {
+            if (board != null) {
+                if (hamming == Integer.MAX_VALUE) {
+                    hamming = board.hamming();
+                }
+            }
+
+            return hamming;
         }
 
         @Override
@@ -200,10 +209,17 @@ public class Solver {
             if (left > right)
                 return 1;
 
-            // When two search nodes have the same priority,
-            // break ties by comparing Manhattan distances of the two boards
-            left = this.distance();
-            right = o.distance();
+            left = this.getManhattan();
+            right = o.getManhattan();
+
+            if (left < right)
+                return -1;
+
+            if (left > right)
+                return 1;
+
+            left = this.getHamming();
+            right = o.getHamming();
 
             if (left < right)
                 return -1;
