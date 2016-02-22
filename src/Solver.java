@@ -1,4 +1,8 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stopwatch;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stack;
 
 /**
  * Thomas A. Rieck
@@ -176,7 +180,7 @@ public class Solver {
         private SearchNode previous;
 
         private int priority() {
-            return moves * 10 + getManhattan();
+            return moves + getHamming();
         }
 
         private int getManhattan() {
