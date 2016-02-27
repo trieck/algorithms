@@ -102,7 +102,7 @@ public class Percolation {
 
     /**
      * Is site (row <tt>i</tt>, column <tt>j</tt>) full?
-     * <p>
+     * <p/>
      * A full site is an open site that can be connected to an
      * open site in the top row via a chain of neighboring
      * (left, right, up, down) open sites.
@@ -130,6 +130,9 @@ public class Percolation {
      * @return true if percolates, otherwise false
      */
     public boolean percolates() {
+        if (N == 1)
+            return isOpen(1, 1);
+
         // check whether virtual top site is connected to virtual bottom site
         return ufa.connected(top, bottom);
     }

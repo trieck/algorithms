@@ -166,8 +166,7 @@ public class Solver {
      */
     private class SearchNode implements Comparable<SearchNode> {
         private Board board;
-        private int moves, manhattan = Integer.MAX_VALUE,
-                hamming = Integer.MAX_VALUE;
+        private int moves, manhattan = Integer.MAX_VALUE;
         private SearchNode previous;
 
         private int getManhattan() {
@@ -178,16 +177,6 @@ public class Solver {
             }
 
             return manhattan;
-        }
-
-        private int getHamming() {
-            if (board != null) {
-                if (hamming == Integer.MAX_VALUE) {
-                    hamming = board.hamming();
-                }
-            }
-
-            return hamming;
         }
 
         @Override

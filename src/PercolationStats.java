@@ -41,10 +41,6 @@ public class PercolationStats {
      * @param args application arguments
      */
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.err.printf("%s: N T%n", PercolationStats.class.getSimpleName());
-            System.exit(1);
-        }
 
         int N = Integer.parseInt(args[0]);
         int T = Integer.parseInt(args[1]);
