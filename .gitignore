@@ -5,3 +5,8 @@
 collinear
 /*.log
 percolation
+kdtree
+/src/KdTreeGenerator.java
+/src/KdTreeVisualizer.java
+/src/NearestNeighborVisualizer.java
+/src/RangeSearchVisualizer.java
