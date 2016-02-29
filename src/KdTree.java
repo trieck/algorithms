@@ -61,6 +61,10 @@ public class KdTree {
         }
     }
 
+    private static int compare(Point2D p, Node node) {
+        return compare(p, node.p, node.orientX);
+    }
+
     private static int compare(Point2D p1, Point2D p2, boolean orientX) {
         int cmp;
 
@@ -113,15 +117,14 @@ public class KdTree {
      */
     public void insert(Point2D p) {
         checkNull(p);
-        root = put(root, root, p, true);
+        root = put(null, root, p);
     }
 
-    private Node put(Node parent, Node node, Point2D p, boolean orientX) {
-        if (node == null) return new Node(parent, p, orientX);
-
-        int cmp = compare(p, node.p, orientX);
-        if (cmp < 0) node.lb = put(node, node.lb, p, !orientX);
-        else if (cmp > 0) node.rt = put(node, node.rt, p, !orientX);
+    private Node put(Node parent, Node node, Point2D p) {
+        if (node == null) return new Node(parent, p);
+        int cmp = compare(p, node);
+        if (cmp < 0) node.lb = put(node, node.lb, p);
+        else if (cmp > 0) node.rt = put(node, node.rt, p);
         return node;
     }
 
@@ -133,14 +136,14 @@ public class KdTree {
      */
     public boolean contains(Point2D p) {
         checkNull(p);
-        return contains(root, p, true);
+        return contains(root, p);
     }
 
-    private boolean contains(Node node, Point2D p, boolean orientX) {
+    private boolean contains(Node node, Point2D p) {
         if (node == null) return false;
-        int cmp = compare(p, node.p, orientX);
-        if (cmp < 0) return contains(node.lb, p, !orientX);
-        else if (cmp > 0) return contains(node.rt, p, !orientX);
+        int cmp = compare(p, node);
+        if (cmp < 0) return contains(node.lb, p);
+        else if (cmp > 0) return contains(node.rt, p);
         else return node.p.equals(p);
     }
 
@@ -291,40 +294,41 @@ public class KdTree {
         private Node rt;            // the right/top subtree
         private boolean orientX;    // orientation
 
-        private Node(Node parent, Point2D p, boolean orientX) {
+        private Node(Node parent, Point2D p) {
             this.p = p;
-            this.rect = makeRect(parent, p, orientX);
-            this.orientX = orientX;
             this.lb = null;
             this.rt = null;
+            setRect(parent);
         }
 
-        private static RectHV makeRect(Node node, Point2D p, boolean orientX) {
-            if (node == null)
-                return new RectHV(0, 0, 1, 1);
+        private void setRect(Node parent) {
+            if (parent == null) {
+                this.orientX = true;
+                this.rect = new RectHV(0, 0, 1, 1);
+            } else {
+                this.orientX = !parent.orientX;
+                int cmp = compare(p, parent);
 
-            int cmp = compare(p, node.p, orientX);
-
-            RectHV rect;
-            if (orientX) { // split horizontally
-                if (cmp < 0) {
-                    rect = new RectHV(node.rect.xmin(), node.rect.ymin(), node
-                            .rect.xmax(), node.p.y());
-                } else {
-                    rect = new RectHV(node.rect.xmin(), node.p.y(),
-                            node.rect.xmax(), node.rect.ymax());
-                }
-            } else {    // split vertically
-                if (cmp < 0) {
-                    rect = new RectHV(node.rect.xmin(), node.rect.ymin(), node
-                            .p.x(), node.rect.ymax());
-                } else {
-                    rect = new RectHV(node.p.x(), node.rect.ymin(),
-                            node.rect.xmax(), node.rect.ymax());
+                if (orientX) { // split horizontally
+                    if (cmp < 0) {
+                        rect = new RectHV(parent.rect.xmin(),
+                                parent.rect.ymin(), parent.rect.xmax(),
+                                parent.p.y());
+                    } else {
+                        rect = new RectHV(parent.rect.xmin(), parent.p.y(),
+                                parent.rect.xmax(), parent.rect.ymax());
+                    }
+                } else {    // split vertically
+                    if (cmp < 0) {
+                        rect = new RectHV(parent.rect.xmin(),
+                                parent.rect.ymin(), parent.p.x(),
+                                parent.rect.ymax());
+                    } else {
+                        rect = new RectHV(parent.p.x(), parent.rect.ymin(),
+                                parent.rect.xmax(), parent.rect.ymax());
+                    }
                 }
             }
-
-            return rect;
         }
 
         @Override
