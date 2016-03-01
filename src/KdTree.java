@@ -122,9 +122,11 @@ public class KdTree {
 
     private Node put(Node parent, Node node, Point2D p) {
         if (node == null) return new Node(parent, p);
+        if (node.p.equals(p)) return node;
+
         int cmp = compare(p, node);
         if (cmp < 0) node.lb = put(node, node.lb, p);
-        else if (cmp > 0) node.rt = put(node, node.rt, p);
+        else node.rt = put(node, node.rt, p);
         return node;
     }
 
@@ -141,10 +143,10 @@ public class KdTree {
 
     private boolean contains(Node node, Point2D p) {
         if (node == null) return false;
+        if (node.p.equals(p)) return true;
         int cmp = compare(p, node);
         if (cmp < 0) return contains(node.lb, p);
-        else if (cmp > 0) return contains(node.rt, p);
-        else return node.p.equals(p);
+        else return contains(node.rt, p);
     }
 
     /**
