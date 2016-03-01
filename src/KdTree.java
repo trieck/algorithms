@@ -106,7 +106,7 @@ public class KdTree {
 
     private int size(Node node) {
         if (node == null) return 0;
-        else return 1 + size(node.lb) + size(node.rt);
+        else return node.N;
     }
 
     /**
@@ -121,12 +121,13 @@ public class KdTree {
     }
 
     private Node put(Node parent, Node node, Point2D p) {
-        if (node == null) return new Node(parent, p);
+        if (node == null) return new Node(parent, p, 1);
         if (node.p.equals(p)) return node;
 
         int cmp = compare(p, node);
         if (cmp < 0) node.lb = put(node, node.lb, p);
         else node.rt = put(node, node.rt, p);
+        node.N = 1 + size(node.lb) + size(node.rt);
         return node;
     }
 
@@ -295,11 +296,13 @@ public class KdTree {
         private Node lb;            // the left/bottom subtree
         private Node rt;            // the right/top subtree
         private boolean orientX;    // orientation
+        private int N;              // number of nodes in subtree
 
-        private Node(Node parent, Point2D p) {
+        private Node(Node parent, Point2D p, int N) {
             this.p = p;
             this.lb = null;
             this.rt = null;
+            this.N = N;
             setRect(parent);
         }
 
